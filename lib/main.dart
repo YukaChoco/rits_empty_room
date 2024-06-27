@@ -85,23 +85,26 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ListTile(
-              title: const Text('Item 1'),
+              title: const Text('リアルタイムの空き教室'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
+            Divider(color: Theme.of(context).colorScheme.secondary),
             ListTile(
-              title: const Text('Item 2'),
+              title: const Text('キャンパス設定画面'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
+            Divider(color: Theme.of(context).colorScheme.secondary),
             ListTile(
-              title: const Text('Item 3'),
+              title: const Text('空き教室一覧'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
+            Divider(color: Theme.of(context).colorScheme.secondary),
           ],
         ),
       ),
