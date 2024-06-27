@@ -46,23 +46,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // ドロワーの表示状態を管理する変数
-  bool _isDrawerVisible = false;
-
-  // モーダルを表示する関数
-  void _showDrawer() {
-    setState(() {
-      _isDrawerVisible = true;
-    });
-  }
-
-  // モーダルを非表示にする関数
-  void _hideDrawer() {
-    setState(() {
-      _isDrawerVisible = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,40 +87,36 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Item 1'),
               onTap: () {
-                _hideDrawer();
+                Navigator.pop(context);
               },
             ),
             ListTile(
               title: const Text('Item 2'),
               onTap: () {
-                _hideDrawer();
+                Navigator.pop(context);
               },
             ),
             ListTile(
               title: const Text('Item 3'),
               onTap: () {
-                _hideDrawer();
+                Navigator.pop(context);
               },
             ),
           ],
         ),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'is Drawer visible?',
-            ),
             Text(
-              '$_isDrawerVisible',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'is Drawer visible?',
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _hideDrawer,
+        onPressed: () {},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
