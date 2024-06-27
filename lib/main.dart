@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Rits Empty Room'),
+      home: const MyHomePage(title: 'RitsEmptyRooms'),
     );
   }
 }
@@ -60,6 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
+        centerTitle: false,
+        toolbarHeight: 72,
         title: Text(
           widget.title,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
