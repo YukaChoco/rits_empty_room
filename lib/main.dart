@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -46,12 +45,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  // ドロワーの表示状態を管理する変数
+  bool _isDrawerVisible = false;
 
-  void _incrementCounter() {
-    FirebaseAnalytics.instance.logEvent(name: 'ボタンが押されました');
+  // モーダルを表示する関数
+  void _showDrawer() {
     setState(() {
-      _counter++;
+      _isDrawerVisible = true;
+    });
+  }
+
+  // モーダルを非表示にする関数
+  void _hideDrawer() {
+    setState(() {
+      _isDrawerVisible = false;
     });
   }
 
@@ -68,23 +75,31 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Theme.of(context).colorScheme.onPrimary,
               fontWeight: FontWeight.bold),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.menu),
+            color: Theme.of(context).colorScheme.onPrimary,
+            iconSize: 36,
+            onPressed: _showDrawer,
+          ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'is Drawer visible?',
             ),
             Text(
-              '$_counter',
+              '$_isDrawerVisible',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _hideDrawer,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
