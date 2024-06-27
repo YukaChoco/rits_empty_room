@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rits_empty_room/campus_setting_page.dart';
 import 'package:rits_empty_room/firebase_options.dart';
+import 'package:rits_empty_room/table_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -95,6 +97,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('キャンパス設定画面'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CampusSettingPage(),
+                  ),
+                );
               },
             ),
             Divider(color: Theme.of(context).colorScheme.secondary),
@@ -102,6 +110,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('空き教室一覧'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TablePage(),
+                  ),
+                );
               },
             ),
             Divider(color: Theme.of(context).colorScheme.secondary),
