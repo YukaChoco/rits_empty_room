@@ -22,7 +22,13 @@ class MyApp extends StatelessWidget {
       title: 'RitsEmptyRoom',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 255, 0, 0)),
+          seedColor: const Color(0xFF990000),
+          primary: const Color(0xFF990000),
+          onPrimary: const Color(0xFFEDEAE8),
+          secondary: const Color(0xFFD9D9D9),
+          surface: const Color(0xFFEDEAE8),
+          onSurface: const Color(0xFF2A2B27),
+        ),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Rits Empty Room'),
@@ -53,8 +59,13 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(
+          widget.title,
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.bold),
+        ),
       ),
       body: Center(
         child: Column(
