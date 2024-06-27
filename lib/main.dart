@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rits_empty_room/firebase_options.dart';
 
 Future main() async {
@@ -69,20 +70,57 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         centerTitle: false,
         toolbarHeight: 72,
+        iconTheme: IconThemeData(
+            color: Theme.of(context).colorScheme.onPrimary, size: 36),
         title: Text(
           widget.title,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               color: Theme.of(context).colorScheme.onPrimary,
               fontWeight: FontWeight.bold),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.menu),
-            color: Theme.of(context).colorScheme.onPrimary,
-            iconSize: 36,
-            onPressed: _showDrawer,
-          ),
-        ],
+      ),
+      endDrawer: Drawer(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              child: Column(
+                children: [
+                  SvgPicture.asset('assets/logo.svg',
+                      semanticsLabel: 'アプリのロゴ', width: 100, height: 100),
+                  Text(
+                    'RitsEmptyRooms',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {
+                _hideDrawer();
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                _hideDrawer();
+              },
+            ),
+            ListTile(
+              title: const Text('Item 3'),
+              onTap: () {
+                _hideDrawer();
+              },
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: Column(
