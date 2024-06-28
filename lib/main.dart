@@ -6,6 +6,7 @@ import 'package:rits_empty_room/campus_setting_page.dart';
 import 'package:rits_empty_room/firebase_options.dart';
 import 'package:rits_empty_room/service.dart';
 import 'package:rits_empty_room/table_page.dart';
+import 'package:rits_empty_room/type.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -135,13 +136,11 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'is Drawer visible?',
-                ),
+                const Text('is Drawer visible?'),
                 TextButton(
                     onPressed: () {
                       final service = FirestoreService();
-                      service.getBkcList();
+                      service.getEmptyRooms(Campus.bkc, Weeks.mon, 2);
                     },
                     child: Text('hoge'))
               ],
