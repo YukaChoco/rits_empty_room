@@ -22,7 +22,7 @@ class FirestoreService {
     final c2 = c2Rooms.where((room) => rooms.contains(room)).toList();
 
     return [
-      Room(name: 'コラーニングI', rooms: c1),
+      Room(name: 'コラーニングⅠ', rooms: c1),
       Room(name: 'コラーニングⅡ', rooms: c2),
     ];
   }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rits_empty_room/campus_setting_page.dart';
 import 'package:rits_empty_room/firebase_options.dart';
+import 'package:rits_empty_room/loading_provider.dart';
 import 'package:rits_empty_room/rooms_provider.dart';
 import 'package:rits_empty_room/service.dart';
 import 'package:rits_empty_room/table_page.dart';
@@ -55,7 +56,7 @@ class MyHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final rooms = ref.watch(roomsController);
     print('rooms: $rooms');
-    var isLoading = true;
+    var isLoading = ref.watch(loadingController);
     print('isLoading: $isLoading');
     // ここでFirestoreServiceを使ってデータを取得する
     final firestoreService = FirestoreService();
@@ -63,7 +64,7 @@ class MyHomePage extends ConsumerWidget {
     if (rooms.isEmpty) {
       firestoreService.getEmptyRooms(Campus.bkc, Weeks.mon, 1).then((value) {
         ref.read(roomsController.notifier).updateRooms(value);
-        isLoading = false;
+        ref.read(loadingController.notifier).updateLoading(false);
       });
     }
 
@@ -154,6 +155,7 @@ class MyHomePage extends ConsumerWidget {
                 const Text('空き教室一覧',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     )),
                 const SizedBox(height: 20),
                 ListView.builder(
@@ -162,11 +164,43 @@ class MyHomePage extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final room = rooms[index];
                     return ListTile(
-                      title: Text(room.name),
-                      subtitle: Row(
-                        children: List.generate(
-                          room.rooms.length,
-                          (index) => Text(room.rooms[index]),
+                      title: Stack(
+                        alignment: Alignment.bottomLeft,
+                        children: [
+                          Text(
+                            room.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            child: Container(
+                              width: room.name.length * 16, // テキストの幅を計算
+                              height: 1,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ],
+                      ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(left: 24),
+                        child: SizedBox(
+                          // 画面サイズに合わせて横幅を調整
+                          width: MediaQuery.of(context).size.width,
+                          child: Wrap(
+                            spacing: 8,
+                            children: List.generate(
+                              room.rooms.length,
+                              (index) => Text(
+                                room.rooms[index],
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     );
@@ -175,6 +209,18 @@ class MyHomePage extends ConsumerWidget {
               ],
             ),
           ),
+          if (isLoading)
+            Center(
+              child: SizedBox(
+                height: 100,
+                width: 100,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).colorScheme.primary.withOpacity(0.5)),
+                  strokeWidth: 10,
+                ),
+              ),
+            ),
         ],
       ),
     );
