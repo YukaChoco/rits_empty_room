@@ -67,6 +67,7 @@ class MyHomePage extends ConsumerWidget {
       (Weeks.fri, '金'),
     ];
     final weekSelection = ref.watch(weekSelectionController);
+    final periodSelection = ref.watch(periodSelectionController);
 
     // ここでFirestoreServiceを使ってデータを取得する
     final firestoreService = FirestoreService();
@@ -168,6 +169,7 @@ class MyHomePage extends ConsumerWidget {
                       fontSize: 16,
                     )),
                 const SizedBox(height: 20),
+                // 曜日選択ボタン
                 Container(
                   height: 28,
                   decoration: BoxDecoration(
@@ -182,7 +184,10 @@ class MyHomePage extends ConsumerWidget {
                             .updateLoading(true);
                         firestoreService
                             .getEmptyRooms(
-                                Campus.bkc, Weeks.values[index + 1], 3)
+                          Campus.bkc,
+                          Weeks.values[index + 1],
+                          periodSelection.indexOf(true) + 1,
+                        )
                             .then((value) {
                           ref.read(roomsController.notifier).updateRooms(value);
                           ref
@@ -207,6 +212,50 @@ class MyHomePage extends ConsumerWidget {
                       ),
                       children: weeksOptions.map((e) => Text(e.$2)).toList()),
                 ),
+                const SizedBox(height: 12),
+                // 時限選択ボタン
+                Container(
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: ToggleButtons(
+                    isSelected: periodSelection,
+                    onPressed: (int index) {
+                      ref.read(loadingController.notifier).updateLoading(true);
+                      firestoreService
+                          .getEmptyRooms(
+                              Campus.bkc,
+                              Weeks.values[weekSelection.indexOf(true) + 1],
+                              index + 1)
+                          .then((value) {
+                        ref.read(roomsController.notifier).updateRooms(value);
+                        ref
+                            .read(loadingController.notifier)
+                            .updateLoading(false);
+                      });
+                      ref
+                          .read(periodSelectionController.notifier)
+                          .updateSelection(List.generate(
+                              periodSelection.length, (i) => i == index));
+                    },
+                    color: Theme.of(context).colorScheme.onSurface,
+                    selectedColor: Theme.of(context).colorScheme.onSurface,
+                    fillColor: Theme.of(context).colorScheme.secondary,
+                    borderRadius: BorderRadius.circular(4),
+                    borderColor: Theme.of(context).colorScheme.onSurface,
+                    selectedBorderColor:
+                        Theme.of(context).colorScheme.onSurface,
+                    constraints: const BoxConstraints(
+                      minWidth: 53,
+                      minHeight: 28,
+                    ),
+                    children: List.generate(
+                        6, (index) => Text((index + 1).toString())),
+                  ),
+                ),
+                const SizedBox(height: 42),
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: rooms.length,
