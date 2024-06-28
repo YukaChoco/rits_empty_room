@@ -56,9 +56,7 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final rooms = ref.watch(roomsController);
-    print('rooms: $rooms');
     var isLoading = ref.watch(loadingController);
-    print('isLoading: $isLoading');
     const List<(Weeks, String)> weeksOptions = <(Weeks, String)>[
       (Weeks.mon, '月'),
       (Weeks.tue, '火'),
