@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rits_empty_room/rooms.dart';
+import 'package:rits_empty_room/constants/rooms.dart';
 
 final roomsController = StateNotifierProvider<Rooms, List<Room>>((ref) {
   return Rooms(ref);

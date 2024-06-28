@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rits_empty_room/rooms.dart';
-import 'package:rits_empty_room/type.dart';
+import 'package:rits_empty_room/constants/rooms.dart';
+import 'package:rits_empty_room/types/type.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;

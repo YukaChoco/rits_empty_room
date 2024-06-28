@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rits_empty_room/campus_setting_page.dart';
 import 'package:rits_empty_room/firebase_options.dart';
-import 'package:rits_empty_room/loading_provider.dart';
-import 'package:rits_empty_room/rooms_provider.dart';
-import 'package:rits_empty_room/selections_provider.dart';
-import 'package:rits_empty_room/service.dart';
+import 'package:rits_empty_room/providers/loading_provider.dart';
+import 'package:rits_empty_room/providers/rooms_provider.dart';
+import 'package:rits_empty_room/providers/selections_provider.dart';
+import 'package:rits_empty_room/logics/service.dart';
 import 'package:rits_empty_room/table_page.dart';
-import 'package:rits_empty_room/type.dart';
+import 'package:rits_empty_room/types/type.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
