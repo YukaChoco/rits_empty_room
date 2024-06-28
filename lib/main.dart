@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rits_empty_room/campus_setting_page.dart';
 import 'package:rits_empty_room/firebase_options.dart';
+import 'package:rits_empty_room/rooms.dart';
 import 'package:rits_empty_room/service.dart';
 import 'package:rits_empty_room/table_page.dart';
 import 'package:rits_empty_room/type.dart';
@@ -52,6 +53,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    var isLoading = true;
+    // roomsのstateを持つ
+    var rooms = [];
+
+    // bkcの月曜日の2限の空き教室を取得、取得中はスピナーを表示
+    final service = FirestoreService();
+    service.getEmptyRooms(Campus.bkc, Weeks.mon, 2).then((rooms) {
+      rooms = rooms;
+      isLoading = false;
+      debugPrint('rooms: ${rooms.first.rooms}');
+    });
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -142,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       final service = FirestoreService();
                       service.getEmptyRooms(Campus.bkc, Weeks.mon, 2);
                     },
-                    child: Text('hoge'))
+                    child: const Text('hoge'))
               ],
             ),
           ),
