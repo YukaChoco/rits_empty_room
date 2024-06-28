@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:rits_empty_room/campus_setting_page.dart';
 import 'package:rits_empty_room/firebase_options.dart';
 import 'package:rits_empty_room/providers/campus_provider.dart';
+import 'package:rits_empty_room/providers/is_first_provider.dart';
 import 'package:rits_empty_room/providers/loading_provider.dart';
 import 'package:rits_empty_room/providers/rooms_provider.dart';
 import 'package:rits_empty_room/providers/room_selections_provider.dart';
@@ -56,6 +57,7 @@ class MyHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isFirstLoad = ref.watch(isFirstController);
     final rooms = ref.watch(roomsController);
     final isLoading = ref.watch(loadingController);
     final campus = ref.watch(campusController);
@@ -74,10 +76,17 @@ class MyHomePage extends ConsumerWidget {
     // ここでFirestoreServiceを使ってデータを取得する
     final firestoreService = FirestoreService();
     // 初回だけデータを取得する
-    if (rooms.isEmpty) {
-      firestoreService.getEmptyRooms(campus, Weeks.mon, 1).then((value) {
+    if (isFirstLoad) {
+      firestoreService
+          .getEmptyRooms(
+        campus,
+        Weeks.mon,
+        1,
+      )
+          .then((value) {
         ref.read(roomsController.notifier).updateRooms(value);
         ref.read(loadingController.notifier).updateLoading(false);
+        ref.read(isFirstController.notifier).updateIsFirst(false);
       });
     }
 

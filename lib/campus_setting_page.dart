@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rits_empty_room/providers/campus_provider.dart';
 import 'package:rits_empty_room/providers/campus_selections_provider.dart';
+import 'package:rits_empty_room/providers/rooms_provider.dart';
 import 'package:rits_empty_room/types/type.dart';
 
 class CampusSettingPage extends ConsumerWidget {
