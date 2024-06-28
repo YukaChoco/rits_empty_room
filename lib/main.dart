@@ -159,8 +159,9 @@ class MyHomePage extends ConsumerWidget {
           ),
           Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                const SizedBox(height: 30),
                 const Text('空き教室一覧',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
