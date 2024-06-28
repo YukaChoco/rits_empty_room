@@ -7,6 +7,7 @@ import 'package:rits_empty_room/campus_setting_page.dart';
 import 'package:rits_empty_room/firebase_options.dart';
 import 'package:rits_empty_room/loading_provider.dart';
 import 'package:rits_empty_room/rooms_provider.dart';
+import 'package:rits_empty_room/selections_provider.dart';
 import 'package:rits_empty_room/service.dart';
 import 'package:rits_empty_room/table_page.dart';
 import 'package:rits_empty_room/type.dart';
@@ -58,7 +59,14 @@ class MyHomePage extends ConsumerWidget {
     print('rooms: $rooms');
     var isLoading = ref.watch(loadingController);
     print('isLoading: $isLoading');
-    List<bool> _selections = List.generate(5, (_) => false);
+    const List<(Weeks, String)> weeksOptions = <(Weeks, String)>[
+      (Weeks.mon, '月'),
+      (Weeks.tue, '火'),
+      (Weeks.wed, '水'),
+      (Weeks.thu, '木'),
+      (Weeks.fri, '金'),
+    ];
+    final weekSelection = ref.watch(weekSelectionController);
 
     // ここでFirestoreServiceを使ってデータを取得する
     final firestoreService = FirestoreService();
@@ -160,33 +168,44 @@ class MyHomePage extends ConsumerWidget {
                       fontSize: 16,
                     )),
                 const SizedBox(height: 20),
-                ToggleButtons(
-                  isSelected: _selections,
-                  children: const [
-                    Text('月'),
-                    Text('火'),
-                    Text('水'),
-                    Text('木'),
-                    Text('金'),
-                  ],
-                  onPressed: (int index) {
-                    ref.read(loadingController.notifier).updateLoading(true);
-                    firestoreService
-                        .getEmptyRooms(Campus.bkc, Weeks.values[index + 1], 3)
-                        .then((value) {
-                      ref.read(roomsController.notifier).updateRooms(value);
-                      ref.read(loadingController.notifier).updateLoading(false);
-                    });
-                    for (int buttonIndex = 0;
-                        buttonIndex < _selections.length;
-                        buttonIndex++) {
-                      if (buttonIndex == index) {
-                        _selections[buttonIndex] = true;
-                      } else {
-                        _selections[buttonIndex] = false;
-                      }
-                    }
-                  },
+                Container(
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: ToggleButtons(
+                      isSelected: weekSelection,
+                      onPressed: (int index) {
+                        ref
+                            .read(loadingController.notifier)
+                            .updateLoading(true);
+                        firestoreService
+                            .getEmptyRooms(
+                                Campus.bkc, Weeks.values[index + 1], 3)
+                            .then((value) {
+                          ref.read(roomsController.notifier).updateRooms(value);
+                          ref
+                              .read(loadingController.notifier)
+                              .updateLoading(false);
+                        });
+                        ref
+                            .read(weekSelectionController.notifier)
+                            .updateSelection(List.generate(
+                                weeksOptions.length, (i) => i == index));
+                      },
+                      color: Theme.of(context).colorScheme.onSurface,
+                      selectedColor: Theme.of(context).colorScheme.onSurface,
+                      fillColor: Theme.of(context).colorScheme.secondary,
+                      borderRadius: BorderRadius.circular(4),
+                      borderColor: Theme.of(context).colorScheme.onSurface,
+                      selectedBorderColor:
+                          Theme.of(context).colorScheme.onSurface,
+                      constraints: const BoxConstraints(
+                        minWidth: 64,
+                        minHeight: 28,
+                      ),
+                      children: weeksOptions.map((e) => Text(e.$2)).toList()),
                 ),
                 ListView.builder(
                   shrinkWrap: true,
