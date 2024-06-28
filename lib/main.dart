@@ -123,15 +123,31 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'is Drawer visible?',
+      body: Stack(
+        children: [
+          Positioned(
+            right: 20,
+            bottom: 20,
+            child: SvgPicture.asset(
+              'assets/logo.svg',
+              semanticsLabel: 'アプリのロゴ',
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.secondary,
+                BlendMode.srcIn,
+              ),
             ),
-          ],
-        ),
+          ),
+          const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'is Drawer visible?',
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,6 +1,7 @@
 // campus_setting_page.dart
 // ```dart
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class TablePage extends StatelessWidget {
   const TablePage({super.key});
@@ -26,18 +27,34 @@ class TablePage extends StatelessWidget {
               ),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Table Page',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+      body: Stack(
+        children: [
+          Positioned(
+            right: 20,
+            bottom: 20,
+            child: SvgPicture.asset(
+              'assets/logo.svg',
+              semanticsLabel: 'アプリのロゴ',
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.secondary,
+                BlendMode.srcIn,
+              ),
             ),
-          ],
-        ),
+          ),
+          Center(
+            child: Stack(
+              children: [
+                Text(
+                  '作成中の画面です',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
