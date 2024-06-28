@@ -8,7 +8,7 @@ import 'package:rits_empty_room/firebase_options.dart';
 import 'package:rits_empty_room/providers/campus_provider.dart';
 import 'package:rits_empty_room/providers/loading_provider.dart';
 import 'package:rits_empty_room/providers/rooms_provider.dart';
-import 'package:rits_empty_room/providers/selections_provider.dart';
+import 'package:rits_empty_room/providers/room_selections_provider.dart';
 import 'package:rits_empty_room/logics/service.dart';
 import 'package:rits_empty_room/table_page.dart';
 import 'package:rits_empty_room/types/type.dart';
