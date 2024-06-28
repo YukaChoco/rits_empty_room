@@ -58,6 +58,8 @@ class MyHomePage extends ConsumerWidget {
     print('rooms: $rooms');
     var isLoading = ref.watch(loadingController);
     print('isLoading: $isLoading');
+    List<bool> _selections = List.generate(5, (_) => false);
+
     // ここでFirestoreServiceを使ってデータを取得する
     final firestoreService = FirestoreService();
     // 初回だけデータを取得する
@@ -158,6 +160,34 @@ class MyHomePage extends ConsumerWidget {
                       fontSize: 16,
                     )),
                 const SizedBox(height: 20),
+                ToggleButtons(
+                  isSelected: _selections,
+                  children: const [
+                    Text('月'),
+                    Text('火'),
+                    Text('水'),
+                    Text('木'),
+                    Text('金'),
+                  ],
+                  onPressed: (int index) {
+                    ref.read(loadingController.notifier).updateLoading(true);
+                    firestoreService
+                        .getEmptyRooms(Campus.bkc, Weeks.values[index + 1], 3)
+                        .then((value) {
+                      ref.read(roomsController.notifier).updateRooms(value);
+                      ref.read(loadingController.notifier).updateLoading(false);
+                    });
+                    for (int buttonIndex = 0;
+                        buttonIndex < _selections.length;
+                        buttonIndex++) {
+                      if (buttonIndex == index) {
+                        _selections[buttonIndex] = true;
+                      } else {
+                        _selections[buttonIndex] = false;
+                      }
+                    }
+                  },
+                ),
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: rooms.length,
@@ -176,7 +206,7 @@ class MyHomePage extends ConsumerWidget {
                           Positioned(
                             bottom: 0,
                             child: Container(
-                              width: room.name.length * 16, // テキストの幅を計算
+                              width: room.name.length * 16,
                               height: 1,
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
@@ -186,7 +216,6 @@ class MyHomePage extends ConsumerWidget {
                       subtitle: Padding(
                         padding: const EdgeInsets.only(left: 24),
                         child: SizedBox(
-                          // 画面サイズに合わせて横幅を調整
                           width: MediaQuery.of(context).size.width,
                           child: Wrap(
                             spacing: 8,

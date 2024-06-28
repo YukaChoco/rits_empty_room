@@ -8,13 +8,22 @@ class FirestoreService {
   // collection:bkc, ドキュメント一覧を取得
   Future<List<Room>> getEmptyRooms(Campus campus, Weeks day, int period) async {
     if (campus == Campus.none || day == Weeks.none) {
-      return [];
+      return [
+        Room(name: 'コラーニングⅠ', rooms: []),
+        Room(name: 'コラーニングⅡ', rooms: []),
+      ];
     }
     final campusStr = campus.toString().substring(7);
     final dayStr = day.toString().substring(6, 9);
     final docId = dayStr + period.toString();
 
     final doc = await _db.collection(campusStr).doc(docId).get();
+    if (!doc.exists) {
+      return [
+        Room(name: 'コラーニングⅠ', rooms: []),
+        Room(name: 'コラーニングⅡ', rooms: []),
+      ];
+    }
     final rooms = doc.data()!['rooms'];
 
     // c1Rooms, c2Roomsに分類
