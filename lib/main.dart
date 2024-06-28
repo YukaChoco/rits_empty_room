@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rits_empty_room/campus_setting_page.dart';
 import 'package:rits_empty_room/firebase_options.dart';
+import 'package:rits_empty_room/service.dart';
 import 'package:rits_empty_room/table_page.dart';
 
 Future main() async {
@@ -130,13 +131,19 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          const Center(
+          Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
                   'is Drawer visible?',
                 ),
+                TextButton(
+                    onPressed: () {
+                      final service = FirestoreService();
+                      service.getBkcList();
+                    },
+                    child: Text('hoge'))
               ],
             ),
           ),
