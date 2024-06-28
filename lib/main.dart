@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rits_empty_room/campus_setting_page.dart';
 import 'package:rits_empty_room/firebase_options.dart';
+import 'package:rits_empty_room/providers/campus_provider.dart';
 import 'package:rits_empty_room/providers/loading_provider.dart';
 import 'package:rits_empty_room/providers/rooms_provider.dart';
 import 'package:rits_empty_room/providers/selections_provider.dart';
@@ -43,7 +44,7 @@ class MyApp extends ConsumerWidget {
         ),
         useMaterial3: true,
       ),
-      home: MyHomePage(title: 'RitsEmptyRooms'),
+      home: const MyHomePage(title: 'RitsEmptyRooms'),
     );
   }
 }
@@ -56,7 +57,10 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final rooms = ref.watch(roomsController);
-    var isLoading = ref.watch(loadingController);
+    final isLoading = ref.watch(loadingController);
+    final campus = ref.watch(campusController);
+    final campusString = campus.toString().split('.').last;
+
     const List<(Weeks, String)> weeksOptions = <(Weeks, String)>[
       (Weeks.mon, '月'),
       (Weeks.tue, '火'),
@@ -71,7 +75,7 @@ class MyHomePage extends ConsumerWidget {
     final firestoreService = FirestoreService();
     // 初回だけデータを取得する
     if (rooms.isEmpty) {
-      firestoreService.getEmptyRooms(Campus.bkc, Weeks.mon, 1).then((value) {
+      firestoreService.getEmptyRooms(campus, Weeks.mon, 1).then((value) {
         ref.read(roomsController.notifier).updateRooms(value);
         ref.read(loadingController.notifier).updateLoading(false);
       });
@@ -162,7 +166,7 @@ class MyHomePage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 const SizedBox(height: 30),
-                const Text('空き教室一覧',
+                Text('${campusString.toUpperCase()}の空き教室一覧',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -183,7 +187,7 @@ class MyHomePage extends ConsumerWidget {
                             .updateLoading(true);
                         firestoreService
                             .getEmptyRooms(
-                          Campus.bkc,
+                          campus,
                           Weeks.values[index + 1],
                           periodSelection.indexOf(true) + 1,
                         )
@@ -225,7 +229,7 @@ class MyHomePage extends ConsumerWidget {
                       ref.read(loadingController.notifier).updateLoading(true);
                       firestoreService
                           .getEmptyRooms(
-                              Campus.bkc,
+                              campus,
                               Weeks.values[weekSelection.indexOf(true) + 1],
                               index + 1)
                           .then((value) {
