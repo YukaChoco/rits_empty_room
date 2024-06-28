@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rits_empty_room/campus_setting_page.dart';
 import 'package:rits_empty_room/firebase_options.dart';
-import 'package:rits_empty_room/rooms.dart';
+import 'package:rits_empty_room/rooms_provider.dart';
 import 'package:rits_empty_room/service.dart';
 import 'package:rits_empty_room/table_page.dart';
 import 'package:rits_empty_room/type.dart';
@@ -15,14 +16,18 @@ Future main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'RitsEmptyRooms',
       theme: ThemeData(
@@ -36,34 +41,31 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'RitsEmptyRooms'),
+      home: MyHomePage(title: 'RitsEmptyRooms'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final rooms = ref.watch(roomsController);
+    print('rooms: $rooms');
     var isLoading = true;
-    // roomsのstateを持つ
-    var rooms = [];
-
-    // bkcの月曜日の2限の空き教室を取得、取得中はスピナーを表示
-    final service = FirestoreService();
-    service.getEmptyRooms(Campus.bkc, Weeks.mon, 2).then((rooms) {
-      rooms = rooms;
-      isLoading = false;
-      debugPrint('rooms: ${rooms.first.rooms}');
-    });
+    print('isLoading: $isLoading');
+    // ここでFirestoreServiceを使ってデータを取得する
+    final firestoreService = FirestoreService();
+    // 初回だけデータを取得する
+    if (rooms.isEmpty) {
+      firestoreService.getEmptyRooms(Campus.bkc, Weeks.mon, 1).then((value) {
+        ref.read(roomsController.notifier).updateRooms(value);
+        isLoading = false;
+      });
+    }
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -74,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         iconTheme: IconThemeData(
             color: Theme.of(context).colorScheme.onPrimary, size: 36),
         title: Text(
-          widget.title,
+          title,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               color: Theme.of(context).colorScheme.onPrimary,
               fontWeight: FontWeight.bold),
@@ -149,13 +151,27 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('is Drawer visible?'),
-                TextButton(
-                    onPressed: () {
-                      final service = FirestoreService();
-                      service.getEmptyRooms(Campus.bkc, Weeks.mon, 2);
-                    },
-                    child: const Text('hoge'))
+                const Text('空き教室一覧',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    )),
+                const SizedBox(height: 20),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: rooms.length,
+                  itemBuilder: (context, index) {
+                    final room = rooms[index];
+                    return ListTile(
+                      title: Text(room.name),
+                      subtitle: Row(
+                        children: List.generate(
+                          room.rooms.length,
+                          (index) => Text(room.rooms[index]),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
