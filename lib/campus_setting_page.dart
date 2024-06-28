@@ -64,21 +64,32 @@ class CampusSettingPage extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                const SizedBox(height: 30),
                 for (var i = 0; i < campusOptions.length; i++)
-                  ListTile(
-                    title: GestureDetector(
-                        onTap: () {
+                  SizedBox(
+                    height: 52,
+                    child: ListTile(
+                      title: GestureDetector(
+                          onTap: () {
+                            onSelect(i);
+                          },
+                          child: Text(campusOptions[i].$2)),
+                      leading: Radio(
+                        value: campusSelection[i],
+                        groupValue: true,
+                        onChanged: (bool? value) {
                           onSelect(i);
                         },
-                        child: Text(campusOptions[i].$2)),
-                    leading: Radio(
-                      value: campusSelection[i],
-                      groupValue: true,
-                      onChanged: (bool? value) {
-                        onSelect(i);
-                      },
+                      ),
                     ),
                   ),
+                Expanded(
+                    child: Center(
+                  child: Image.asset(
+                      'assets/campus_${campusSelection.indexWhere((element) => element)+1}.png',
+                      width: MediaQuery.of(context).size.width),
+                )),
+                const SizedBox(height: 250),
               ],
             ),
           ),

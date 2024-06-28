@@ -176,7 +176,7 @@ class MyHomePage extends ConsumerWidget {
               children: <Widget>[
                 const SizedBox(height: 30),
                 Text('${campusString.toUpperCase()}の空き教室一覧',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     )),
